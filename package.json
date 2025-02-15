@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fontsource/caveat": "^5.1.1",
+    "apexcharts": "^4.4.0",
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
     "ethers": "^6.13.4",
