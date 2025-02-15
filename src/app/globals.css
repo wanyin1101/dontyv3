@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+
+/* Global Settings */
+:root {
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: 'slnt' 0;
+}
+
+@layer base {
+  /* Body Theme Styles */
+  body {
+    @apply bg-white text-black transition-colors duration-300;
+  }
+
+  html.dark body {
+    @apply bg-zinc-950 text-neutral-200;
+  }
+
+  /* Main Content Theme Styles */
+  main {
+    @apply bg-white text-black transition-colors duration-300;
+  }
+
+  html.dark main {
+    @apply bg-zinc-950 text-neutral-200;
+  }
+
+  /* Icon Theme Adjustment */
+  .icon-theme {
+    filter: invert(0); /* Default Dark Icons in Light Mode */
+    transition: filter 0.3s ease-in-out;
+  }
+
+  html.dark .icon-theme {
+    filter: invert(1) brightness(2); /* White Icons in Dark Mode */
+  }
+
+  /* Theme Toggle Icon */
+  .theme-icon {
+    transition: filter 0.3s ease-in-out;
+  }
+
+  html.dark .theme-icon {
+    filter: invert(1) brightness(2); /* White Sun Icon in Dark Mode */
+  }
+
+  /* Global Link Styles (Optional) */
+  a {
+    @apply text-black dark:text-white;
+  }
+
+  a:hover {
+    @apply underline;
+  }
+
+  footer {
+    @apply bg-gray-100 text-gray-800 transition-colors duration-300;
+  }
+  
+  html.dark footer {
+    @apply bg-zinc-900 text-gray-200;
+  }
+  
+  /* Adjust footer links */
+  footer a {
+    @apply text-gray-700 dark:text-gray-300 hover:underline;
+  }
+  
+  /* Adjust footer borders */
+  footer div {
+    @apply border-gray-300 dark:border-zinc-700;
+  }
+
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .dynamic-gradient {
+    background: linear-gradient(
+      270deg,
+      #e5c0f3,
+      #bfa6f1,
+      #bee4f1,
+      #c4adf1
+    );
+    background-size: 600% 600%;
+    animation: gradientShift 12s ease infinite;
+    opacity: 0.2; /* you can adjust how strong the overlay is */
+  }
+  
+
+}
