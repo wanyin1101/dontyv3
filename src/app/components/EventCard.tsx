@@ -110,8 +110,8 @@ export const EventCard: React.FC<EventProps> = ({ eventAddress }) => {
                 <Image
                     src={eventImageUrl}
                     alt="Event"
-                    width={288}  // corresponds roughly to your container width (w-72)
-                    height={192} // corresponds roughly to your container height (h-48)
+                    width={72}  // corresponds roughly to your container width (w-72)
+                    height={48} // corresponds roughly to your container height (h-48)
                     className="object-cover rounded-t-lg"
                 />
             ) : (
