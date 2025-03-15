@@ -9,22 +9,8 @@ import FAQCarousel from "./components/FAQCarousel";
 import { CollapsibleList } from "./components/CollapsibleList";
 import { InteractiveFeatures } from "./components/InteractiveFeatures";
 import EcosystemBadge from "./components/EcosystemBadge";
+import FeatureCard from "./components/FeatureCard";
 
-
-// -----------------------------
-// A reusable FeatureCard component
-// -----------------------------
-type FeatureCardProps = {
-  title: string;
-  description: string;
-};
-
-export const FeatureCard: React.FC<FeatureCardProps> = ({ title, description }) => (
-  <div className="p-8 bg-white dark:bg-zinc-800 rounded shadow min-w-[260px]">
-    <h3 className="text-xl font-semibold mb-2">{title}</h3>
-    <p className="text-sm">{description}</p>
-  </div>
-);
 
 // -----------------------------
 // Fade-in-up variants for Framer Motion
