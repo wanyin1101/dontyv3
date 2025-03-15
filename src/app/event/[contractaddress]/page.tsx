@@ -245,7 +245,7 @@ export default function EventPage() {
                         setIsModalOpen={setIsModalOpen}
                     />
                     {isModalOpen && (
-                    <CreateCampaignModal
+                    <CreateEventModal
                         setIsModalOpen={setIsModalOpen}
                         contract={contract}
                     />
@@ -334,7 +334,7 @@ type CreateTierModalProps = {
     contract: ThirdwebContract;
 };
 
-const CreateCampaignModal = (
+const CreateEventModal = (
     { setIsModalOpen, contract }: CreateTierModalProps
 ) => {
     const [tierName, setTierName] = useState<string>("");

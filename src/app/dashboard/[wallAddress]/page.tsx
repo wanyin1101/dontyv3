@@ -259,7 +259,7 @@ export default function DashboardPage() {
                 </button>
             </div>
             {isModalOpen && (
-                <CreateCampaignModal
+                <CreateEventModal
                     setIsModalOpen={setIsModalOpen}       
                 />
             )}
@@ -308,11 +308,11 @@ export default function DashboardPage() {
     );
 }
 
-type CreateCampaignModalProps = {
+type CreateEventModalProps = {
     setIsModalOpen: (value: boolean) => void
 };
 
-const CreateCampaignModal = ({ setIsModalOpen}: CreateCampaignModalProps ) => {
+const CreateEventModal = ({ setIsModalOpen}: CreateEventModalProps ) => {
     const account = useActiveAccount();
     const [isDeployingContract, setIsDeployingContract] = useState<boolean>(false);
     const [eventTitle, setEventTitle] = useState<string>("");
@@ -364,7 +364,7 @@ const CreateCampaignModal = ({ setIsModalOpen}: CreateCampaignModalProps ) => {
                     _category: eventCategory
                 },
                 publisher: "0x77A343c5267B2A58011A18134e292a7A6a87daFE",
-                version: "1.0.0",
+                version: "1.0.2",
             });
     
             alert("Contract deployed successfully! Address: " + contractAddress);

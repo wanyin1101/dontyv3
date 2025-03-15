@@ -9,7 +9,7 @@ import { CustomScroll } from "react-custom-scroll";
 // Lazy load ApexCharts to avoid SSR issues
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const CONTRACT_ADDRESS = "0x773e7C88B93955b14AbceB1A05918888C22d555D";
+const CONTRACT_ADDRESS = "0x6a0c1933863b7326b831108ae8a346fbca998247";
 
 // ** API ENDPOINTS **
 const TRANSACTIONS_API = `https://base-sepolia.blockscout.com/api?module=account&action=txlist&address=${CONTRACT_ADDRESS}`;
