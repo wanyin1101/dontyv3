@@ -107,12 +107,10 @@ export const EventCard: React.FC<EventProps> = ({ eventAddress }) => {
         <div className="flex flex-col justify-between w-72 h-96 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden transition-colors duration-300">
             {/* Event Image */}
             {eventImageUrl ? (
-                <Image
+                <img
                     src={eventImageUrl}
                     alt="Event"
-                    width={72}  // corresponds roughly to your container width (w-72)
-                    height={48} // corresponds roughly to your container height (h-48)
-                    className="object-cover rounded-t-lg"
+                    className="w-full h-48 object-cover rounded-t-lg"
                 />
             ) : (
                 <div className="w-full h-48 bg-gray-200 dark:bg-zinc-700 rounded-t-lg"></div>
