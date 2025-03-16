@@ -259,8 +259,41 @@ export default function Home() {
       >
         <div className="container max-w-screen-lg mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Meet the Team</h2>
-          <div className="flex justify-center">
-            <div className="text-center p-4 bg-white dark:bg-zinc-800 rounded shadow">
+
+          {/* Flex container for three "cards" (left ASCII, center card, right ASCII) */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+            
+            {/* LEFT ASCII ART Card */}
+            <div className="p-4 bg-white dark:bg-zinc-800 rounded shadow w-full max-w-sm text-center">
+              <pre className="font-mono text-sm leading-tight text-gray-900 dark:text-gray-100 whitespace-pre">
+      {`⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣠⣠⣶⣿⣷⣿⣿⣿⣷⣷⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣤⣾⣿⢿⣻⡽⣞⣳⡽⠚⠉⠉⠙⠛⢿⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣼⣿⣿⢻⣟⣧⢿⣻⢿⠀⠀⠀⠀⠀⠀⠀⠻⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢀⣾⣿⡿⠞⠛⠚⠫⣟⡿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣧⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⣼⣿⡟⠀⠀⠀⠀⠀⠈⢻⡽⣆⠀⠀⣴⣷⡄⠀⠀⠀⠘⣿⡆⠀⠀⣀⣠⣤⡄
+⠀⠀⣿⣿⠁⠀⠀⠀⠀⠀⠀⠈⣿⠿⢷⡀⠘⠛⠃⠀⠠⠀⠀⣿⣅⣴⡶⠟⠋⢹⣿
+⠀⠀⢻⣿⡀⠀⠀⠀⢾⣿⡆⠀⢿⣴⣴⡇⠀⠀⠀⠀⠀⠀⢠⡟⠋⠁⠀⠀⠀⢸⣿
+⠀⠀⠈⢿⣇⠀⠀⠀⠈⠉⠥⠀⠀⠉⠉⠀⠀⠀⠀⠀⠀⢀⡾⠁⠀⠀⠀⠀⠀⣾⡏
+⠀⠀⠀⠈⢿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠸⠁⠀⠀⠀⠀⠀⣼⡟⠀
+⠀⠀⠀⠀⠀⣹⣿⣶⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠁⠀⠐⢧⡀⠀⢀⣾⠟⠀⠀
+⠀⠀⢀⣰⣾⠟⠉⠀⠀⠉⠉⠀⠐⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣶⡟⠋⠀⠀⠀
+⣠⣶⡿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠈⣿⡆⠀⠀⠀⠀
+⢻⣧⣄⠀⠀⠀⢰⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀
+⠀⠉⠛⠿⣷⣶⣾⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣤⣾⣿⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣷⣦⡀⠀⢀⣀⠀⠀⠀⣠⣴⣿⣿⣿⣿⣷⠀⠀⠀⠀
+⠀⠀⠀⠻⢿⣿⣿⣿⣿⠿⠿⠿⠿⠿⠿⠿⠿⣿⣿⣿⠿⠟⠁⠀
+      `}
+              </pre>
+              <h3 className="font-semibold text-lg mb-2">Snowlo</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Donty Ambassador
+              </p>
+            </div>
+
+            {/* CENTER (CheungWanYin) */}
+            <div className="p-4 bg-white dark:bg-zinc-800 rounded shadow w-full max-w-xs text-center">
               <Image
                 src="/cat.jpg"
                 alt="Team Member 1"
@@ -268,14 +301,55 @@ export default function Home() {
                 height={120}
                 className="mx-auto rounded-full mb-4"
               />
-              <h3 className="font-semibold text-lg">CheungWanYin</h3>
+
+              {/* Clickable name linking to LinkedIn */}
+              <a
+                href="https://www.linkedin.com/in/wanyin-cheung-6916152ba/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <h3 className="font-semibold text-lg text-blue-500 hover:underline">
+                  CheungWanYin
+                </h3>
+              </a>
+
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Polyu infoSecurity
+              </p>
+            </div>
+
+            {/* RIGHT ASCII ART Card */}
+            <div className="p-4 bg-white dark:bg-zinc-800 rounded shadow w-full max-w-sm text-center">
+              <pre className="font-mono text-sm leading-tight text-gray-900 dark:text-gray-100 whitespace-pre">
+      {`
+⠀⠀⠀⠀    ⢀⣠⠤⠤⣀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⣚⣥⣤⠀⠀⢀⡷⠔⠒⠒⠲⠦⡀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⢀⢎⣾⣿⠟⠁⡠⠖⣡⣶⣶⣶⠀⠀⠀⡇
+    ⠀⠀⠀⠀⠀⠀⠀⡔⣱⣿⠟⠁⡠⠊⣠⣾⣿⡿⠟⠁⠀⢀⠌
+    ⠀⠀⠀⠀⢀⠔⠉⠀⠀⠀⠀⠉⠀⠘⠛⠛⠁⠀⣀⠤⠚⠁
+⠀⠀⠀⡔⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢯⠁
+⠀⠀⡸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢱ 
+⠀⣰⠁⠀⣤⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹ 
+⢰⠃⠀⠀⠛⠁⠐⠂⠀⣿⡗⠀⠀⠀⠀⠀⠀⠀⢹
+⠈⢧⣠⣾⣷⣦⣠⣶⣿⣿⣦⠀⠀⠀⠀⠀⠀⠀⡇
+⠒⠒⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⡰
+⠀⠀⠈⢿⣿⣿⣿⣿⣯⡉⠉⠉⠒⠲⢤⡔⠁
+⢀⠔⠁⠈⠻⣿⣿⡿⡋⠉⠓⠦⡄⠀⠀⠉⢫⠉⡆
+⠀⠀⠀⠀⠀⡐⠀⠀⠀⠈⢢⠤⠤⠜⠀⠀⠀⠀⡗⠁
+⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⢇⡀⡖⠒⠒⠤⣀
+      `}
+              </pre>
+              <h3 className="font-semibold text-lg mb-2">Floppy</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Donty Ambassador
               </p>
             </div>
           </div>
         </div>
       </motion.section>
+
+
+
 
       {/* ECOSYSTEMS SECTION (Marquee) */}
       <motion.section

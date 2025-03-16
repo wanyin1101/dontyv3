@@ -10,6 +10,7 @@ import { deployPublishedContract } from "thirdweb/deploys";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import Navbar from "@/app/components/Navbar"; // <-- 1) Import your Navbar component
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 
 // Constants
@@ -114,7 +115,7 @@ export default function DashboardPage() {
         <div className="mx-auto max-w-7xl px-4 mt-4 sm:px-6 lg:px-8">
             {/* Dashboard Header */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-                <p className="text-4xl font-bold text-gray-900 dark:text-white">🎯 Dashboard</p>
+                <p className="text-4xl font-bold text-gray-900 dark:text-white">Dashboard </p>
                 <button
                     className="px-4 py-2 bg-blue-500 text-white rounded-md"
                     onClick={() => setIsModalOpen(true)}
@@ -309,10 +310,10 @@ export default function DashboardPage() {
 }
 
 type CreateEventModalProps = {
-    setIsModalOpen: (value: boolean) => void
-};
-
-const CreateEventModal = ({ setIsModalOpen}: CreateEventModalProps ) => {
+    setIsModalOpen: (value: boolean) => void;
+  };
+  
+  const CreateEventModal = ({ setIsModalOpen }: CreateEventModalProps) => {
     const account = useActiveAccount();
     const [isDeployingContract, setIsDeployingContract] = useState<boolean>(false);
     const [eventTitle, setEventTitle] = useState<string>("");
@@ -321,213 +322,223 @@ const CreateEventModal = ({ setIsModalOpen}: CreateEventModalProps ) => {
     const [eventTarget, setEventTarget] = useState<number>(1);
     const [eventDeadline, setEventDeadline] = useState<number>(1);
     const [eventCategory, setEventCategory] = useState<number>(0);
-
-      // Constants for limits
+  
+    // Constants for limits
     const MAX_EVENT_TITLE_LENGTH = 60;
     const MAX_EVENT_NARRATIVES_LENGTH = 1200;
     const MAX_TARGET = 100_000_000;
     const MAX_DURATION = 1000;
-
-
-    
-    // Deploy contract from DonationDriveFactory
-    const handleDeployContract = async () => {
-        setIsDeployingContract(true);
-    
-        // Validation
-        if (
-            !eventTitle ||
-            !eventNarratives ||
-            !eventImageUrl ||
-            eventTarget <= 0 ||
-            eventDeadline <= 0
-        ) {
-            alert("Please fill in all the required fields with valid values.");
-            setIsDeployingContract(false);
-            return;
-        }
-    
-        try {
-            console.log("Deploying contract...");
-    
-            const contractAddress = await deployPublishedContract({
-                client: client,
-                chain: baseSepolia,
-                account: account!,
-                contractId: "DonationDrive",
-                contractParams: {
-                    _title: eventTitle,
-                    _narratives: eventNarratives,
-                    _imageUrl: eventImageUrl,
-                    _target: eventTarget,
-                    _durationInDays: eventDeadline,
-                    _category: eventCategory
-                },
-                publisher: "0x77A343c5267B2A58011A18134e292a7A6a87daFE",
-                version: "1.0.2",
-            });
-    
-            alert("Contract deployed successfully! Address: " + contractAddress);
-        } catch (error) {
-            console.error("Deployment failed:", error);
-            alert("Failed to deploy contract. Check the console for details.");
-        } finally {
-            setIsDeployingContract(false);
-            setIsModalOpen(false);
-        }
-    };
-
+  
     // Clamping functions
     const handleEventTitleChange = (value: string) => {
-        // Clamp to 60 characters
-        setEventTitle(value.slice(0, MAX_EVENT_TITLE_LENGTH));
+      setEventTitle(value.slice(0, MAX_EVENT_TITLE_LENGTH));
     };
-
+  
     const handleEventNarrativesChange = (value: string) => {
-        // Clamp to 1200 characters
-        setEventNarratives(value.slice(0, MAX_EVENT_NARRATIVES_LENGTH));
+      setEventNarratives(value.slice(0, MAX_EVENT_NARRATIVES_LENGTH));
     };
-
+  
     const handleEventTarget = (value: number) => {
-        if (value < 1) {
+      if (value < 1) {
         setEventTarget(1);
-        } else if (value > MAX_TARGET) {
+      } else if (value > MAX_TARGET) {
         setEventTarget(MAX_TARGET);
-        } else {
+      } else {
         setEventTarget(value);
-        }
+      }
     };
-
+  
     const handleEventDeadline = (value: number) => {
-        if (value < 1) {
+      if (value < 1) {
         setEventDeadline(1);
-        } else if (value > MAX_DURATION) {
+      } else if (value > MAX_DURATION) {
         setEventDeadline(MAX_DURATION);
-        } else {
+      } else {
         setEventDeadline(value);
-        }
+      }
     };
-
+  
+    // Deploy contract from DonationDriveFactory
+    const handleDeployContract = async () => {
+      setIsDeployingContract(true);
+  
+      // Validation
+      if (
+        !eventTitle ||
+        !eventNarratives ||
+        !eventImageUrl ||
+        eventTarget <= 0 ||
+        eventDeadline <= 0
+      ) {
+        toast.error("Please fill in all required fields with valid values.");
+        setIsDeployingContract(false);
+        return;
+      }
+  
+      try {
+        // Show a yellow toast for “pending”
+        toast.warning("Transaction pending...");
+  
+        const contractAddress = await deployPublishedContract({
+          client: client,
+          chain: baseSepolia,
+          account: account!,
+          contractId: "DonationDrive",
+          contractParams: {
+            _title: eventTitle,
+            _narratives: eventNarratives,
+            _imageUrl: eventImageUrl,
+            _target: eventTarget,
+            _durationInDays: eventDeadline,
+            _category: eventCategory,
+          },
+          publisher: "0x77A343c5267B2A58011A18134e292a7A6a87daFE",
+          version: "1.0.2",
+        });
+  
+        // Show a green toast on success
+        toast.success(`Create Event successfully! Contract Address: ${contractAddress}`);
+      } catch (error: any) {
+        console.error("Deployment failed:", error);
+        // Show a red toast on error
+        toast.error(`Failed to deploy contract: ${error.message}`);
+      } finally {
+        setIsDeployingContract(false);
+        setIsModalOpen(false);
+      }
+    };
+  
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center backdrop-blur-md z-50">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center backdrop-blur-md z-50">
         <div className="w-full max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg overflow-auto">
-            {/* Modal Header */}
-            <div className="flex justify-between items-center mb-6 border-b pb-4">
+          {/* Modal Header */}
+          <div className="flex justify-between items-center mb-6 border-b pb-4">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">🎟️ Create Event</h2>
             <button
-                className="text-sm px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md"
-                onClick={() => setIsModalOpen(false)}
+              className="text-sm px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md"
+              onClick={() => setIsModalOpen(false)}
             >
-                Close
+              Close
             </button>
-            </div>
-
-            {/* Modal Content */}
-            <div className="space-y-4">
+          </div>
+  
+          {/* Modal Content */}
+          <div className="space-y-4">
             {/* Event Title */}
             <div>
-                <label className="block text-gray-700 dark:text-gray-300 mb-1">Event Title:</label>
-                <input
+              <label className="block text-gray-700 dark:text-gray-300 mb-1">Event Title:</label>
+              <input
                 type="text"
                 value={eventTitle}
-                // The `maxLength` attribute helps in browsers that enforce it
                 maxLength={MAX_EVENT_TITLE_LENGTH}
                 onChange={(e) => handleEventTitleChange(e.target.value)}
-                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
-                />
+                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 
+                           text-gray-900 focus:ring-2 focus:ring-blue-500 
+                           dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
+              />
             </div>
-
+  
             {/* Narratives */}
             <div>
-                <label className="block text-gray-700 dark:text-gray-300 mb-1">Narratives:</label>
-                <textarea
+              <label className="block text-gray-700 dark:text-gray-300 mb-1">Narratives:</label>
+              <textarea
                 value={eventNarratives}
-                // The `maxLength` attribute helps in browsers that enforce it
                 maxLength={MAX_EVENT_NARRATIVES_LENGTH}
                 onChange={(e) => handleEventNarrativesChange(e.target.value)}
                 rows={3}
-                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
-                />
+                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 
+                           text-gray-900 focus:ring-2 focus:ring-blue-500 
+                           dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
+              />
             </div>
-
-            {/* Image URL (no limit) */}
+  
+            {/* Image URL */}
             <div>
-                <label className="block text-gray-700 dark:text-gray-300 mb-1">Image URL:</label>
-                <input
+              <label className="block text-gray-700 dark:text-gray-300 mb-1">Image URL:</label>
+              <input
                 type="text"
                 value={eventImageUrl}
                 onChange={(e) => setEventImageUrl(e.target.value)}
-                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
-                />
+                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 
+                           text-gray-900 focus:ring-2 focus:ring-blue-500 
+                           dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
+              />
             </div>
-
+  
             {/* Target */}
             <div>
-                <label className="block text-gray-700 dark:text-gray-300 mb-1">Target:</label>
-                <input
+              <label className="block text-gray-700 dark:text-gray-300 mb-1">Target:</label>
+              <input
                 type="number"
                 value={eventTarget}
                 min={1}
                 max={MAX_TARGET}
                 onChange={(e) => handleEventTarget(Number(e.target.value))}
-                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
-                />
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 
+                           text-gray-900 focus:ring-2 focus:ring-blue-500 
+                           dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Range: 1 – {MAX_TARGET}
-                </p>
+              </p>
             </div>
-
+  
             {/* Duration in Days */}
             <div>
-                <label className="block text-gray-700 dark:text-gray-300 mb-1">Duration in Days:</label>
-                <input
+              <label className="block text-gray-700 dark:text-gray-300 mb-1">Duration in Days:</label>
+              <input
                 type="number"
                 value={eventDeadline}
                 min={1}
                 max={MAX_DURATION}
                 onChange={(e) => handleEventDeadline(Number(e.target.value))}
-                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
-                />
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 
+                           text-gray-900 focus:ring-2 focus:ring-blue-500 
+                           dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Range: 1 – {MAX_DURATION} days
-                </p>
+              </p>
             </div>
-
+  
             {/* Category Dropdown */}
             <div>
-                <label className="block text-gray-700 dark:text-gray-300 mb-1">Category:</label>
-                <select
+              <label className="block text-gray-700 dark:text-gray-300 mb-1">Category:</label>
+              <select
                 value={eventCategory}
                 onChange={(e) => setEventCategory(Number(e.target.value))}
-                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
-                >
+                className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 
+                           text-gray-900 focus:ring-2 focus:ring-blue-500 
+                           dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
+              >
                 <option value="" disabled>
-                    -- Select a Category --
+                  -- Select a Category --
                 </option>
                 {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
+                  <option key={category.id} value={category.id}>
                     {category.name}
-                    </option>
+                  </option>
                 ))}
-                </select>
+              </select>
             </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="flex justify-end gap-4 mt-6 border-t pt-4">
+          </div>
+  
+          {/* Modal Footer */}
+          <div className="flex justify-end gap-4 mt-6 border-t pt-4">
             <button
-                className={`px-4 py-2 rounded-md text-white ${
+              className={`px-4 py-2 rounded-md text-white ${
                 isDeployingContract
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700"
-                }`}
-                onClick={handleDeployContract}
-                disabled={isDeployingContract}
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+              onClick={handleDeployContract}
+              disabled={isDeployingContract}
             >
-                {isDeployingContract ? "Deploying..." : "Deploy Contract"}
+              {isDeployingContract ? "Deploying..." : "Deploy Contract"}
             </button>
-            </div>   
-        </div>    
-    </div>
+          </div>
+        </div>
+      </div>
     );
-};
+  };
+  

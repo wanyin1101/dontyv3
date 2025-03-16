@@ -6,7 +6,7 @@ import axios from "axios";
 import dynamic from "next/dynamic";
 import { CustomScroll } from "react-custom-scroll";
 
-// Lazy load ApexCharts to avoid SSR issues
+// Lazy load ApexCharts
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const CONTRACT_ADDRESS = "0x6a0c1933863b7326b831108ae8a346fbca998247";
@@ -42,7 +42,6 @@ export default function TransactionsPage() {
     async function fetchTransactions() {
       try {
         const headers = { "User-Agent": "my-app" };
-
         const response = await axios.get(TRANSACTIONS_API, { headers });
 
         if (response.data.result && Array.isArray(response.data.result)) {
@@ -70,7 +69,7 @@ export default function TransactionsPage() {
           setTimeStamps(formattedData.map((tx) => tx.timeStamp));
         }
 
-        // Fetch additional statistics
+        // Fetch additional stats
         const totalAccountsRes = await axios.get(TOTAL_ACCOUNTS_API);
         setTotalAccounts(totalAccountsRes.data.result || 0);
 
@@ -91,13 +90,30 @@ export default function TransactionsPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-white dark:bg-zinc-950 transition-colors duration-300">
+    <main
+      className={`
+        min-h-screen
+        bg-cover bg-center bg-no-repeat
+        text-gray-900 dark:text-gray-100
+        transition-colors duration-300
+        // Light mode image
+        bg-[url('/colur_webpage_v3.png')]
+        // Dark mode image
+        dark:bg-[url('/bg_colur_webpage_v3.png')]
+      `}
+    >
       <Navbar />
 
-      <div className="max-w-6xl mx-auto p-6">
-        <h1 className="text-4xl font-semibold mb-6">Transactions</h1>
-
-        {/* Summary Stats - Adapts to Light/Dark Mode */}
+      {/* Container with partial transparency & optional blur */}
+      <div
+        className="
+          max-w-6xl mx-auto p-6
+          backdrop-blur-xs
+          rounded-md shadow-lg
+          mt-6
+        "
+      >
+        {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
           {[
             { label: "Total Transactions", value: transactions.length },
@@ -108,7 +124,7 @@ export default function TransactionsPage() {
             <div
               key={index}
               className="p-4 rounded-lg shadow transition-colors duration-300
-                         bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"
+                         bg-gray-100/80 dark:bg-gray-800/80 text-gray-900 dark:text-white"
             >
               <h2 className="text-xl font-semibold">{stat.label}</h2>
               <p className="text-2xl">{stat.value}</p>
@@ -116,8 +132,8 @@ export default function TransactionsPage() {
           ))}
         </div>
 
-        {/* Transactions Table with Styled Scrollbar */}
-        <div className="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow">
+        {/* Transactions Table */}
+        <div className="bg-gray-100/80 dark:bg-gray-900/80 p-4 rounded-lg shadow">
           <CustomScroll allowOuterScroll heightRelativeToParent="500px">
             <table className="w-full text-gray-900 dark:text-white">
               <thead>
@@ -134,25 +150,34 @@ export default function TransactionsPage() {
                 {transactions.map((tx) => (
                   <tr
                     key={tx.hash}
-                    className="border-b border-gray-700 
-                               hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+                    className="
+                      border-b border-gray-700
+                      hover:bg-gray-200 dark:hover:bg-gray-700
+                      transition-colors duration-300
+                    "
                   >
                     <td className="p-2">
-                      <a 
-                        href={`https://base-sepolia.blockscout.com/tx/${tx.hash}`} 
-                        target="_blank" 
-                        className="px-2 py-1 rounded text-xs transition-colors duration-300
-                                   bg-gray-200 dark:bg-gray-700 
-                                   text-blue-600 dark:text-blue-400 
-                                   hover:text-blue-800 dark:hover:text-blue-300">
+                      <a
+                        href={`https://base-sepolia.blockscout.com/tx/${tx.hash}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="
+                          px-2 py-1 rounded text-xs transition-colors duration-300
+                          bg-gray-200 dark:bg-gray-700
+                          text-blue-600 dark:text-blue-400
+                          hover:text-blue-800 dark:hover:text-blue-300
+                        "
+                      >
                         {`${tx.hash.substring(0, 4)}...${tx.hash.substring(tx.hash.length - 4)}`}
                       </a>
                     </td>
                     <td className="p-2">{tx.isError === "0" ? "✅ Success" : "❌ Failed"}</td>
                     <td className="p-2">{tx.blockNumber}</td>
                     <td className="p-2">
-                      {`${tx.from.substring(0, 4)}...${tx.from.substring(tx.from.length - 4)}`} →
-                      {tx.to ? `${tx.to.substring(0, 4)}...${tx.to.substring(tx.to.length - 4)}` : "Contract Creation"}
+                      {`${tx.from.substring(0, 4)}...${tx.from.substring(tx.from.length - 4)}`} →{" "}
+                      {tx.to
+                        ? `${tx.to.substring(0, 4)}...${tx.to.substring(tx.to.length - 4)}`
+                        : "Contract Creation"}
                     </td>
                     <td className="p-2">{(parseFloat(tx.value) / 1e18).toFixed(4)} ETH</td>
                     <td className="p-2">{tx.timeStamp}</td>

@@ -8,6 +8,8 @@ import { baseSepolia } from "thirdweb/chains";
 import { lightTheme, TransactionButton, useActiveAccount, useReadContract } from "thirdweb/react";
 import { TierCard } from "@/app/components/TierCard";
 import Navbar from "@/app/components/Navbar"; 
+import { toast } from "react-toastify";
+
 
 // Category Mapping
 const categories = [
@@ -357,7 +359,9 @@ const CreateEventModal = ({ setIsModalOpen, contract }: CreateTierModalProps) =>
   const handleTierAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = parseInt(e.target.value, 10);
     if (isNaN(value)) value = Number(MIN_TIER_AMOUNT);
-    const clampedValue = BigInt(Math.max(Number(MIN_TIER_AMOUNT), Math.min(value, Number(MAX_TIER_AMOUNT))));
+    const clampedValue = BigInt(
+      Math.max(Number(MIN_TIER_AMOUNT), Math.min(value, Number(MAX_TIER_AMOUNT)))
+    );
     setTierAmount(clampedValue);
   };
 
@@ -405,11 +409,19 @@ const CreateEventModal = ({ setIsModalOpen, contract }: CreateTierModalProps) =>
                 params: [tierName, tierAmount],
               })
             }
-            onTransactionConfirmed={async () => {
-              alert("Tier added successfully!");
+            onTransactionSent={() => {
+              // Show a yellow toast while the transaction is pending
+              toast.warning("Add tier pending...");
+            }}
+            onTransactionConfirmed={() => {
+              // Show a green toast on success
+              toast.success("Tier added successfully!");
               setIsModalOpen(false);
             }}
-            onError={(error) => alert(`Error: ${error.message}`)}
+            onError={(error) => {
+              // Show a red toast on error
+              toast.error(`Error: ${error.message}`);
+            }}
             theme={lightTheme()}
           >
             Add Tier
