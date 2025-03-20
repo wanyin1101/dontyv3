@@ -7,7 +7,7 @@ https://www.youtube.com/watch?v=GxFXHXxd83E
 Install dependencies
 
 ```bash
-yarn
+yarn install
 ```
 
 Start development server
