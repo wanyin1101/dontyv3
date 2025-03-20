@@ -166,7 +166,7 @@ export default function Home() {
       >
         <div className="container max-w-screen-lg mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">
-            Welcome to Donty(Donate to you)
+            Welcome to Donty
           </h2>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
@@ -333,8 +333,8 @@ export default function Home() {
 ⢰⠃⠀⠀⠛⠁⠐⠂⠀⣿⡗⠀⠀⠀⠀⠀⠀⠀⢹
 ⠈⢧⣠⣾⣷⣦⣠⣶⣿⣿⣦⠀⠀⠀⠀⠀⠀⠀⡇
 ⠒⠒⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⡰
-⠀⠀⠈⢿⣿⣿⣿⣿⣯⡉⠉⠉⠒⠲⢤⡔⠁
-⢀⠔⠁⠈⠻⣿⣿⡿⡋⠉⠓⠦⡄⠀⠀⠉⢫⠉⡆
+⠀ ⠈⢿⣿⣿⣿⣿⣯⡉⠉⠉⠒⠲⢤⡔⠁
+ ⢀⠔⠁⠈⠻⣿⣿⡿⡋⠉⠓⠦⡄⠀⠀⠉⢫⠉⡆
 ⠀⠀⠀⠀⠀⡐⠀⠀⠀⠈⢢⠤⠤⠜⠀⠀⠀⠀⡗⠁
 ⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⢇⡀⡖⠒⠒⠤⣀
       `}
@@ -347,8 +347,6 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
-
-
 
 
       {/* ECOSYSTEMS SECTION (Marquee) */}

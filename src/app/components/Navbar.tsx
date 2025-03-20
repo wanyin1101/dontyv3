@@ -73,6 +73,24 @@ const Navbar = () => {
                                 </Link>
                             )}
 
+                            {/* souvenir */}
+                            <Link href={'/souvenir'} className="flex flex-col items-center space-y-1">
+                                <img
+                                    src="/souvenir.svg"
+                                    alt="Souvenir Icon"
+                                    className="h-6 w-6 icon-theme"
+                                />
+                                <p className="text-sm font-medium">Souvenir</p>
+                            </Link>
+                            {/* souvenir */}
+                            <Link href={'/stake'} className="flex flex-col items-center space-y-1">
+                                <img
+                                    src="/stake.svg"
+                                    alt="Stake Icon"
+                                    className="h-6 w-6 icon-theme"
+                                />
+                                <p className="text-sm font-medium">Stake</p>
+                            </Link>
                             {/* Transactions */}
                             <Link href={'/transactions'} className="flex flex-col items-center space-y-1">
                                 <img

@@ -397,7 +397,7 @@ type CreateEventModalProps = {
         });
   
         // Show a green toast on success
-        toast.success(`Create Event successfully! Contract Address: ${contractAddress}`);
+        toast.success(`Create Event successfully! `);
       } catch (error: any) {
         console.error("Deployment failed:", error);
         // Show a red toast on error
