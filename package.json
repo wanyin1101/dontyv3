@@ -17,6 +17,7 @@
     "@fontsource/caveat": "^5.1.1",
     "@thirdweb-dev/react": "^4.9.4",
     "@thirdweb-dev/sdk": "^4.0.99",
+    "@vercel/analytics": "^1.5.0",
     "apexcharts": "^4.4.0",
     "aws-crt": "^1.25.3",
     "axios": "^1.7.9",
