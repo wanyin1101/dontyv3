@@ -84,6 +84,16 @@ export default function StakingPage() {
     },
   });
 
+  const {
+    data: contractStakingTokenBalance,
+    refetch: refetchContractStakingTokenBalance,
+  } = useReadContract({
+    contract: STAKING_CONTRACT,
+    method: "stakingTokenBalance",
+    params: [],
+    queryOptions: { enabled: !!account },
+  });
+
   // Auto-refresh data every 10s
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -96,6 +106,7 @@ export default function StakingPage() {
     refetchStakeInfo();
     refetchStakingTokenBalance();
     refetchRewardTokenBalance();
+    refetchContractStakingTokenBalance();
   }
 
   // ----------------------------------
@@ -290,20 +301,20 @@ export default function StakingPage() {
               <strong>Address:</strong> {account.address}
             </p>
             <p>
-              <strong>Staking Token:</strong> {formatInteger(stakingTokenBalance || 0n)}
+              <strong>Donty Token:</strong> {formatInteger(stakingTokenBalance || 0n)}
             </p>
             <p>
-              <strong>Reward Token:</strong> {formatInteger(rewardTokenBalance || 0n)}
+              <strong>Donty Reward:</strong> {formatInteger(rewardTokenBalance || 0n)}
             </p>
 
             {stakeInfo && (
               <>
                 <hr className="my-2 border-gray-300 dark:border-gray-700" />
                 <p>
-                  <strong>Balance Staked:</strong> {formatInteger(BigInt(stakeInfo[0].toString()) || 0n)}
+                  <strong>Your Staked Donty:</strong> {formatInteger(BigInt(stakeInfo[0].toString()) || 0n)}
                 </p>
                 <p>
-                  <strong>Reward Balance:</strong> {formatTwoDecimals(BigInt(stakeInfo[1].toString()) || 0n)}
+                  <strong>Your Earned Rewards:</strong> {formatTwoDecimals(BigInt(stakeInfo[1].toString()) || 0n)}
                 </p>
               </>
             )}
@@ -323,9 +334,9 @@ export default function StakingPage() {
                 duration-300
               "
             >
-              <h2 className="text-2xl font-semibold mb-4 text-center">Claim Tokens</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-center">Claim Donty Tokens</h2>
               <p className="mb-4 text-center">
-                Claim your ERC-20 tokens from the Token Drop.
+                Claim your Donty Token from the Drop to start staking!
               </p>
 
               {/* Center the "Claim Tokens" button */}
@@ -351,7 +362,7 @@ export default function StakingPage() {
                     duration-300
                   "
                 >
-                  Claim Tokens
+                  Claim Donty Tokens
                 </TransactionButton>
               </div>
             </div>
@@ -370,8 +381,17 @@ export default function StakingPage() {
             >
               <h2 className="text-2xl font-semibold mb-4 text-center">Stake & Rewards</h2>
               <p className="mb-4 text-center">
-                Stake your tokens, withdraw, and claim rewards.
+               Stake Donty Token to earn rewards!
+
               </p>
+
+              {contractStakingTokenBalance && (
+                <p className="mb-2 text-center">
+                  <strong> Total Donty Staked in Contract:</strong>{" "}
+                  {toEther(contractStakingTokenBalance)}
+                </p>
+              )}        
+
 
               {/* Row: Stake + Withdraw side by side, both centered */}
               <div className="flex justify-center space-x-4 mb-4">

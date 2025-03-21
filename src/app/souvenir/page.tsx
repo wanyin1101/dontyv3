@@ -109,6 +109,7 @@ export default function SouvenirPage() {
           </button>
 
           {/* AnimatePresence for smooth transitions */}
+          
           <AnimatePresence mode="popLayout">
             <motion.div
               key={activeIndex}
@@ -119,7 +120,7 @@ export default function SouvenirPage() {
                 backdrop-blur-sm
                 rounded-lg
                 shadow-lg
-                p-6
+                p-8
                 transition-colors
                 duration-300
                 flex
@@ -159,7 +160,7 @@ export default function SouvenirPage() {
               <p
                 className="
                   font-caveat
-                  text-xl
+                  text-2xl
                   text-center
                   mb-4
                   transition
