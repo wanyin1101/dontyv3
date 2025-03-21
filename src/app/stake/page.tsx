@@ -381,7 +381,7 @@ export default function StakingPage() {
             >
               <h2 className="text-2xl font-semibold mb-4 text-center">Stake & Rewards</h2>
               <p className="mb-4 text-center">
-               Stake Donty Token to earn rewards!
+               Stake Donty Token to earn Rewards!
 
               </p>
 

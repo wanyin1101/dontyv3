@@ -115,11 +115,20 @@ export default function DashboardPage() {
         <div className="mx-auto max-w-7xl px-4 mt-4 sm:px-6 lg:px-8">
             {/* Dashboard Header */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-                <p className="text-4xl font-bold text-gray-900 dark:text-white">Dashboard </p>
-                <button
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                    onClick={() => setIsModalOpen(true)}
-                >Create Event</button>
+              <div>
+                <p className="text-4xl font-bold text-gray-900 dark:text-white">
+                  Dashboard
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  Manage your created events in one place.
+                </p>
+              </div>
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                onClick={() => setIsModalOpen(true)}
+              >
+                Create Event
+              </button>
             </div>
 
             {/* Search Bar and Sorting Dropdown */}
