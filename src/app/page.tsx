@@ -309,7 +309,7 @@ export default function Home() {
                 rel="noopener noreferrer"
               >
                 <h3 className="font-semibold text-lg text-blue-500 hover:underline">
-                  CheungWanYin
+                  wanyin1101.eth
                 </h3>
               </a>
 
@@ -431,16 +431,16 @@ export default function Home() {
 
           {/* Footer Navigation Links */}
           <div className="flex space-x-4 text-sm">
-            <a href="#features" className="hover:underline">
+            <a href="https://wanyins-organization.gitbook.io/donty-docs" className="hover:underline">
               Features
             </a>
-            <a href="#content" className="hover:underline">
+            <a href="https://wanyins-organization.gitbook.io/donty-docs/getting-started/publish-your-docs" className="hover:underline">
               Content
             </a>
-            <a href="#team" className="hover:underline">
+            <a href="https://wanyins-organization.gitbook.io/donty-docs/getting-started/team" className="hover:underline">
               Team
             </a>
-            <a href="#faq" className="hover:underline">
+            <a href="https://wanyins-organization.gitbook.io/donty-docs/getting-started/faq" className="hover:underline">
               FAQ
             </a>
           </div>
