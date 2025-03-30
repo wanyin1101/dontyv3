@@ -17,6 +17,7 @@ import {
 } from "@/app/constants/contracts";
 import { baseSepolia } from "thirdweb/chains";
 import { client } from "../client";
+import Footer from "../components/Footer";
 
 /** Converts a bigint on-chain value to a decimal string (e.g., "800.0"). */
 function toEther(value: bigint, decimals = 18): string {
@@ -514,7 +515,7 @@ export default function StakingPage() {
 
             {/* Centered content below the title */}
             <p className="text-center mb-2">
-              Your Staking Token Balance:{" "}
+              Your Donty Token Balance:{" "}
               <strong>{toEther(stakingTokenBalance || 0n)}</strong>
             </p>
 
@@ -675,6 +676,7 @@ export default function StakingPage() {
           </div>
         </div>
       )}
+      <Footer />
     </main>
   );
 }

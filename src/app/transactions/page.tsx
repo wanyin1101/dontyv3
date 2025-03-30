@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { CustomScroll } from "react-custom-scroll";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image"; // for arrows
+import Footer from "../components/Footer";
 
 // Lazy load ApexCharts
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -16,7 +17,7 @@ const CONTRACT_ADDRESS = "0x6a0c1933863b7326b831108ae8a346fbca998247";
 
 /** The 5 NFT addresses you want to track */
 const NFT_ADDRESSES = [
-  "0x79dc3441FB8d05BeA4Edf372C0BF1c36be4ae8C8", // Slowlo
+  "0x79dc3441FB8d05BeA4Edf372c0BF1c36be4ae8C8", // Slowlo
   "0x93c8EF9F13C2c00223c51Eca6fC91A77b1174E6c", // Floppy
   "0xe1Fd326E6325e923F3C6278d9cF82665CB6735B6", // Original Rose
   "0xe89c861642e1Bf24121840234880e89fE28DeefC", // Colur Rose
@@ -84,11 +85,7 @@ export default function TransactionsPage() {
   const [nftTransactions, setNftTransactions] = useState<Transaction[]>([]);// NFT
   const [stakeTransactions, setStakeTransactions] = useState<Transaction[]>([]); // Stake
 
-  // We'll track gasUsed separately in each array, so we won't rely on a single gasUsed array
-  // If you want to keep a single array, you can, but let's remove references to it.
   const [loading, setLoading] = useState(true);
-
-  // For AnimatePresence: which table is shown?
   const [activeTableIndex, setActiveTableIndex] = useState(0);
 
   // 2) Table definitions
@@ -175,20 +172,15 @@ export default function TransactionsPage() {
     return (
       <div className="bg-gray-100/80 dark:bg-gray-900/80 p-4 rounded-lg shadow">
         <p className="text-center font-bold text-2xl">NFT Transactions</p>
-
-        {/* 5 small containers: how many tx per NFT */}
         <div className="flex flex-wrap justify-center gap-4 my-4">
           {NFT_ADDRESSES.map((nftAddr) => {
             const lower = nftAddr.toLowerCase();
             const name = NFT_ADDRESS_MAP[lower] || "Unknown NFT";
-
-            // Count how many NFT transactions mention this address (from or to).
             const count = nftTransactions.filter(
               (tx) =>
                 tx.from.toLowerCase() === lower ||
                 tx.to?.toLowerCase() === lower
             ).length;
-
             return (
               <div
                 key={nftAddr}
@@ -207,7 +199,6 @@ export default function TransactionsPage() {
             );
           })}
         </div>
-
         <CustomScroll allowOuterScroll heightRelativeToParent="500px">
           <table className="w-full text-gray-900 dark:text-white">
             <thead>
@@ -268,64 +259,30 @@ export default function TransactionsPage() {
   }
 
   function StakeTable() {
-    // We'll parse the stakeTransactions to figure out method & store in "methodName"
     const parsedStakeTx = stakeTransactions.map((tx) => {
       const methodName = decodeStakeMethod(tx.input);
       return { ...tx, methodName };
     });
-
-    // We'll count each method type
     const stakeCount = parsedStakeTx.filter((tx) => tx.methodName === "stake").length;
     const withdrawCount = parsedStakeTx.filter((tx) => tx.methodName === "withdraw").length;
     const claimCount = parsedStakeTx.filter((tx) => tx.methodName === "claimRewards").length;
-
     return (
       <div className="bg-gray-100/80 dark:bg-gray-900/80 p-4 rounded-lg shadow">
         <p className="text-center font-bold text-2xl mb-4">Stake Contract Transactions</p>
-
-        {/* 3 small containers: how many calls to stake, withdraw, claimRewards */}
         <div className="flex flex-wrap justify-center gap-4 my-4">
-          <div
-            className="
-              p-4
-              bg-white dark:bg-gray-800
-              rounded
-              shadow
-              text-center
-              min-w-[120px]
-            "
-          >
+          <div className="p-4 bg-white dark:bg-gray-800 rounded shadow text-center min-w-[120px]">
             <h2 className="font-bold">Stake</h2>
             <p>Tx Count: {stakeCount}</p>
           </div>
-          <div
-            className="
-              p-4
-              bg-white dark:bg-gray-800
-              rounded
-              shadow
-              text-center
-              min-w-[120px]
-            "
-          >
+          <div className="p-4 bg-white dark:bg-gray-800 rounded shadow text-center min-w-[120px]">
             <h2 className="font-bold">Withdraw</h2>
             <p>Tx Count: {withdrawCount}</p>
           </div>
-          <div
-            className="
-              p-4
-              bg-white dark:bg-gray-800
-              rounded
-              shadow
-              text-center
-              min-w-[120px]
-            "
-          >
+          <div className="p-4 bg-white dark:bg-gray-800 rounded shadow text-center min-w-[120px]">
             <h2 className="font-bold">ClaimRewards</h2>
             <p>Tx Count: {claimCount}</p>
           </div>
         </div>
-
         <CustomScroll allowOuterScroll heightRelativeToParent="500px">
           <table className="w-full text-gray-900 dark:text-white">
             <thead>
@@ -391,31 +348,21 @@ export default function TransactionsPage() {
   useEffect(() => {
     async function fetchAllData() {
       try {
-        // 4A) Fetch main contract transactions
         await fetchMainContractTransactions();
-
-        // 4B) Fetch NFT addresses transactions
         await fetchNftAddressesTransactions();
-
-        // 4C) Fetch stake contract transactions
         await fetchStakeContractTransactions();
-
-        // Done loading
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
         setLoading(false);
       }
     }
-
     fetchAllData();
   }, []);
 
-  // 4A) Fetch main contract transactions
   async function fetchMainContractTransactions() {
     const headers = { "User-Agent": "my-app" };
     const response = await axios.get(TRANSACTIONS_API, { headers });
-
     if (response.data.result && Array.isArray(response.data.result)) {
       const formattedData: Transaction[] = response.data.result.map((tx: any) => ({
         hash: tx.hash,
@@ -436,68 +383,51 @@ export default function TransactionsPage() {
         isError: tx.isError || "0",
         input: tx.input || "0x",
       }));
-
       setTransactions(formattedData);
     }
   }
 
-  // 4B) Fetch transactions for the 5 NFT addresses
   async function fetchNftAddressesTransactions() {
     const headers = { "User-Agent": "my-app" };
     let combinedNftTxs: Transaction[] = [];
-
-    // For each NFT address, fetch transactions
     for (const nftAddress of NFT_ADDRESSES) {
       const api = `https://base-sepolia.blockscout.com/api?module=account&action=txlist&address=${nftAddress}`;
       const resp = await axios.get(api, { headers });
-
       if (resp.data.result && Array.isArray(resp.data.result)) {
         const formattedData: Transaction[] = resp.data.result.map((tx: any) => ({
           hash: tx.hash,
           blockNumber: tx.blockNumber,
           gasUsed: tx.gasUsed || "0",
-          timeStamp: new Date(parseInt(tx.timeStamp) * 1000).toLocaleString(
-            "en-US",
-            {
-              month: "numeric",
-              day: "numeric",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-              hour12: true,
-            }
-          ),
+          timeStamp: new Date(parseInt(tx.timeStamp) * 1000).toLocaleString("en-US", {
+            month: "numeric",
+            day: "numeric",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+          }),
           from: tx.from || "Unknown",
           to: tx.to || "Contract Creation",
           value: tx.value || "0",
           isError: tx.isError || "0",
           input: tx.input || "0x",
         }));
-
-        // Combine into one big array
         combinedNftTxs = combinedNftTxs.concat(formattedData);
       }
     }
-
-    // Remove duplicates by Txn hash if needed
     const uniqueMap: Record<string, Transaction> = {};
     for (const tx of combinedNftTxs) {
       uniqueMap[tx.hash] = tx;
     }
     const uniqueNftTxs = Object.values(uniqueMap);
-
-    // Sort descending by blockNumber
     uniqueNftTxs.sort((a, b) => parseInt(b.blockNumber) - parseInt(a.blockNumber));
-
     setNftTransactions(uniqueNftTxs);
   }
 
-  // 4C) Fetch stake contract transactions
   async function fetchStakeContractTransactions() {
     const headers = { "User-Agent": "my-app" };
     const response = await axios.get(STAKE_CONTRACT_API, { headers });
-
     if (response.data.result && Array.isArray(response.data.result)) {
       const formattedData: Transaction[] = response.data.result.map((tx: any) => ({
         hash: tx.hash,
@@ -518,138 +448,132 @@ export default function TransactionsPage() {
         isError: tx.isError || "0",
         input: tx.input || "0x",
       }));
-
       setStakeTransactions(formattedData);
     }
   }
 
-  // 5) Summaries for the top row
-  //  - #1: "Total Event Transactions" => transactions.length
-  //  - #2: "Total NFT Transactions" => nftTransactions.length
-  //  - #3: "Total Staking Transactions" => stakeTransactions.length
-  //  - #4: "Total Gas Used" => sum of gasUsed from all 3 arrays
   const totalEventTx = transactions.length;
   const totalNftTx = nftTransactions.length;
   const totalStakeTx = stakeTransactions.length;
-
-  // Sum gas from all 3 sets
   const gasEvent = transactions.reduce((acc, tx) => acc + parseInt(tx.gasUsed), 0);
   const gasNft = nftTransactions.reduce((acc, tx) => acc + parseInt(tx.gasUsed), 0);
   const gasStake = stakeTransactions.reduce((acc, tx) => acc + parseInt(tx.gasUsed), 0);
   const totalGasUsedAll = gasEvent + gasNft + gasStake;
 
-  // 6) Render
   return (
-    <main
-      className={`
-        min-h-screen
-        bg-cover bg-center bg-no-repeat
-        text-gray-900 dark:text-gray-100
-        transition-colors duration-300
-        bg-[url('/colur_webpage_v3.png')]
-        dark:bg-[url('/bg_colur_webpage_v3.png')]
-      `}
-    >
-      <Navbar />
-
-      {/* Container with partial transparency & optional blur */}
-      <div
-        className="
-          max-w-7xl mx-auto p-6
-          backdrop-blur-xs
-          rounded-md shadow-lg
-          mt-6
-        "
+    <div className="flex flex-col min-h-screen">
+      <main
+        className={`
+          min-h-screen
+          bg-cover bg-center bg-no-repeat
+          text-gray-900 dark:text-gray-100
+          transition-colors duration-300
+          bg-[url('/colur_webpage_v3.png')]
+          dark:bg-[url('/bg_colur_webpage_v3.png')]
+        `}
       >
-        {/* Summary Stats */}
-        <div className="grid grid-cols-1 text-center md:grid-cols-4 gap-6 mb-6">
-          {[
-            { label: "Total Event Transactions", value: totalEventTx },
-            { label: "Total NFT Transactions", value: totalNftTx },
-            { label: "Total Staking Transactions", value: totalStakeTx },
-            { label: "Total Gas Used", value: totalGasUsedAll },
-          ].map((stat, index) => (
-            <div
-              key={index}
+        <Navbar />
+
+        {/* Container with partial transparency & optional blur */}
+        <div
+          className="
+            max-w-7xl mx-auto p-6
+            backdrop-blur-xs
+            rounded-md shadow-lg
+            mt-6
+          "
+        >
+          {/* Summary Stats */}
+          <div className="grid grid-cols-1 text-center md:grid-cols-4 gap-6 mb-6">
+            {[
+              { label: "Total Event Transactions", value: totalEventTx },
+              { label: "Total NFT Transactions", value: totalNftTx },
+              { label: "Total Staking Transactions", value: totalStakeTx },
+              { label: "Total Gas Used", value: totalGasUsedAll },
+            ].map((stat, index) => (
+              <div
+                key={index}
+                className="
+                  p-4 rounded-lg shadow transition-colors duration-300
+                  bg-gray-100/80 dark:bg-gray-800/80
+                  text-gray-900 dark:text-white
+                "
+              >
+                <h2 className="text-xl font-semibold">{stat.label}</h2>
+                <p className="text-2xl">{stat.value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Left & Right Arrows + AnimatePresence for multiple tables */}
+          <div className="relative w-full mt-4">
+            {/* Left Arrow */}
+            <button
+              onClick={() => {
+                setActiveTableIndex((prev) => (prev + tableViews.length - 1) % tableViews.length);
+              }}
               className="
-                p-4 rounded-lg shadow transition-colors duration-300
-                bg-gray-100/80 dark:bg-gray-800/80
-                text-gray-900 dark:text-white
+                absolute
+                left-0 top-1/2
+                -translate-y-1/2
+                transform
+                p-4
+                transition-transform
+                z-10
+                hover:scale-110
               "
             >
-              <h2 className="text-xl font-semibold">{stat.label}</h2>
-              <p className="text-2xl">{stat.value}</p>
-            </div>
-          ))}
-        </div>
+              <Image
+                src="/Left.svg"
+                alt="Left Arrow"
+                width={24}
+                height={24}
+                className="object-contain dark:invert"
+              />
+            </button>
 
-        {/* Left & Right Arrows + AnimatePresence for multiple tables */}
-        <div className="relative w-full mt-4">
-          {/* Left Arrow */}
-          <button
-            onClick={() => {
-              setActiveTableIndex((prev) => (prev + tableViews.length - 1) % tableViews.length);
-            }}
-            className="
-              absolute
-              left-0 top-1/2
-              -translate-y-1/2
-              transform
-              p-4
-              transition-transform
-              z-10
-              hover:scale-110
-            "
-          >
-            <Image
-              src="/Left.svg"
-              alt="Left Arrow"
-              width={24}
-              height={24}
-              className="object-contain dark:invert"
-            />
-          </button>
-
-          {/* Right Arrow */}
-          <button
-            onClick={() => {
-              setActiveTableIndex((prev) => (prev + 1) % tableViews.length);
-            }}
-            className="
-              absolute
-              right-0 top-1/2
-              -translate-y-1/2
-              transform
-              p-4
-              transition-transform
-              z-10
-              hover:scale-110
-            "
-          >
-            <Image
-              src="/right.svg"
-              alt="Right Arrow"
-              width={24}
-              height={24}
-              className="object-contain dark:invert"
-            />
-          </button>
-
-          {/* AnimatePresence for smooth transitions of tables */}
-          <AnimatePresence mode="popLayout">
-            <motion.div
-              key={activeTableIndex}
-              initial={{ x: 50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -50, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+            {/* Right Arrow */}
+            <button
+              onClick={() => {
+                setActiveTableIndex((prev) => (prev + 1) % tableViews.length);
+              }}
+              className="
+                absolute
+                right-0 top-1/2
+                -translate-y-1/2
+                transform
+                p-4
+                transition-transform
+                z-10
+                hover:scale-110
+              "
             >
-              {/* Render the current table */}
-              {tableViews[activeTableIndex].component}
-            </motion.div>
-          </AnimatePresence>
+              <Image
+                src="/right.svg"
+                alt="Right Arrow"
+                width={24}
+                height={24}
+                className="object-contain dark:invert"
+              />
+            </button>
+
+            {/* AnimatePresence for smooth transitions of tables */}
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                key={activeTableIndex}
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -50, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* Render the current table */}
+                {tableViews[activeTableIndex].component}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+      <Footer />
+    </div>
   );
 }

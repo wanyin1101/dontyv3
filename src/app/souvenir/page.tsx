@@ -8,6 +8,7 @@ import { claimTo } from "thirdweb/extensions/erc721";
 import { baseSepolia } from "thirdweb/chains";
 import { TransactionButton, useActiveAccount } from "thirdweb/react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer"; // Import Footer component
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 
@@ -61,162 +62,161 @@ export default function SouvenirPage() {
   };
 
   return (
-    <main
-      className={`
-        min-h-screen
-        flex flex-col
-        bg-cover bg-center bg-no-repeat
-        text-gray-900 dark:text-gray-100
-        transition-colors duration-300
-        // Light mode image
-        bg-[url('/colur_webpage_v3.png')]
-        // Dark mode image
-        dark:bg-[url('/bg_colur_webpage_v3.png')]
-      `}
-    >
-      {/* Top Navbar */}
-      <Navbar />
+    <div className="flex flex-col min-h-screen">
+      {/* Main content area with flex-grow */}
+      <main
+        className={`
+          flex-grow
+          bg-cover bg-center bg-no-repeat
+          text-gray-900 dark:text-gray-100
+          transition-colors duration-300
+          bg-[url('/colur_webpage_v3.png')]
+          dark:bg-[url('/bg_colur_webpage_v3.png')]
+        `}
+      >
+        {/* Top Navbar */}
+        <Navbar />
 
-      {/* Centered Content Container with Light/Dark Background */}
-      <div className="flex flex-col flex-1 items-center justify-center px-4">
-        <div className="relative w-full max-w-md">
-          {/* Left Arrow */}
-          <button
-            onClick={handlePrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 transform p-4 transition-transform z-10 hover:scale-110"
-          >
-            <Image
-              src="/Left.svg"
-              alt="Left Arrow"
-              width={32}
-              height={32}
-              className="object-contain dark:invert"
-            />
-          </button>
-
-          {/* Right Arrow */}
-          <button
-            onClick={handleNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 transform p-4 transition-transform z-10 hover:scale-110"
-          >
-            <Image
-              src="/right.svg"
-              alt="Right Arrow"
-              width={32}
-              height={32}
-              className="object-contain dark:invert"
-            />
-          </button>
-
-          {/* AnimatePresence for smooth transitions */}
-          
-          <AnimatePresence mode="popLayout">
-            <motion.div
-              key={activeIndex}
-              className="
-                w-full
-                h-[550px]
-                bg-white/80 dark:bg-gray-900/80
-                backdrop-blur-sm
-                rounded-lg
-                shadow-lg
-                p-8
-                transition-colors
-                duration-300
-                flex
-                flex-col
-                justify-between
-              "
-              initial={{ x: 50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -50, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+        {/* Centered Content Container with extra top margin */}
+        <div className="flex flex-col flex-1 items-center justify-center px-4 mt-20">
+          <div className="relative w-full max-w-md">
+            {/* Left Arrow */}
+            <button
+              onClick={handlePrevious}
+              className="absolute left-0 top-1/2 -translate-y-1/2 transform p-4 transition-transform z-10 hover:scale-110"
             >
-              {/* Page Heading (Title) */}
-              <h1
+              <Image
+                src="/Left.svg"
+                alt="Left Arrow"
+                width={32}
+                height={32}
+                className="object-contain dark:invert"
+              />
+            </button>
+
+            {/* Right Arrow */}
+            <button
+              onClick={handleNext}
+              className="absolute right-0 top-1/2 -translate-y-1/2 transform p-4 transition-transform z-10 hover:scale-110"
+            >
+              <Image
+                src="/right.svg"
+                alt="Right Arrow"
+                width={32}
+                height={32}
+                className="object-contain dark:invert"
+              />
+            </button>
+
+            {/* AnimatePresence for smooth transitions */}
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                key={activeIndex}
                 className="
-                  font-caveat
-                  text-5xl
-                  text-center
-                  transition
-                  hover:text-white
+                  w-full
+                  h-[550px]
+                  bg-white/80 dark:bg-gray-900/80
+                  backdrop-blur-sm
+                  rounded-lg
+                  shadow-lg
+                  p-8
+                  transition-colors
+                  duration-300
+                  flex
+                  flex-col
+                  justify-between
                 "
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -50, opacity: 0 }}
+                transition={{ duration: 0.3 }}
               >
-                {containersData[activeIndex].title}
-              </h1>
-
-              {/* Image Container */}
-              <div className="flex justify-center items-center my-4 h-[250px]">
-                <Image
-                  src={containersData[activeIndex].image}
-                  alt="Preview NFT Image"
-                  width={250}
-                  height={250}
-                  className="object-contain"
-                />
-              </div>
-
-              {/* Description */}
-              <p
-                className="
-                  font-caveat
-                  text-2xl
-                  text-center
-                  mb-4
-                  transition
-                  hover:text-white
-                "
-              >
-                {containersData[activeIndex].description}
-              </p>
-
-              {/* Transaction Button */}
-              <div className="flex justify-center">
-                <TransactionButton
-                  transaction={() =>
-                    claimTo({
-                      contract: getContract({
-                        client: client,
-                        chain: defineChain(baseSepolia),
-                        address: containersData[activeIndex].address,
-                      }),
-                      to: account?.address || "",
-                      quantity: 1n,
-                    })
-                  }
-                  onTransactionSent={() => {
-                    // Show a yellow toast while the transaction is pending
-                    toast.warning("Transaction pending...");
-                  }}
-                  onTransactionConfirmed={() => {
-                    // Show a green toast on success
-                    toast.success("NFT claimed successfully!");
-                  }}
-                  onError={(error) => {
-                    // Show a red toast on error
-                    if (error instanceof Error) {
-                      toast.error(`Failed to NFT claimed: ${error.message}`);
-                    } else {
-                      toast.error("Failed to NFT claimed: Unknown error");
-                    }
-                  }}
+                {/* Page Heading (Title) */}
+                <h1
                   className="
-                    px-4 py-2
-                    bg-blue-500 hover:bg-blue-600
-                    dark:bg-blue-600 dark:hover:bg-blue-700
-                    text-white
-                    font-medium
-                    rounded-md
-                    transition-colors duration-300
+                    font-caveat
+                    text-5xl
+                    text-center
+                    transition
+                    hover:text-white
                   "
                 >
-                  Claim NFT
-                </TransactionButton>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+                  {containersData[activeIndex].title}
+                </h1>
+
+                {/* Image Container */}
+                <div className="flex justify-center items-center my-4 h-[250px]">
+                  <Image
+                    src={containersData[activeIndex].image}
+                    alt="Preview NFT Image"
+                    width={250}
+                    height={250}
+                    className="object-contain"
+                  />
+                </div>
+
+                {/* Description */}
+                <p
+                  className="
+                    font-caveat
+                    text-2xl
+                    text-center
+                    mb-4
+                    transition
+                    hover:text-white
+                  "
+                >
+                  {containersData[activeIndex].description}
+                </p>
+
+                {/* Transaction Button */}
+                <div className="flex justify-center">
+                  <TransactionButton
+                    transaction={() =>
+                      claimTo({
+                        contract: getContract({
+                          client: client,
+                          chain: defineChain(baseSepolia),
+                          address: containersData[activeIndex].address,
+                        }),
+                        to: account?.address || "",
+                        quantity: 1n,
+                      })
+                    }
+                    onTransactionSent={() => {
+                      toast.warning("Transaction pending...");
+                    }}
+                    onTransactionConfirmed={() => {
+                      toast.success("NFT claimed successfully!");
+                    }}
+                    onError={(error) => {
+                      if (error instanceof Error) {
+                        toast.error(`Failed to claim NFT: ${error.message}`);
+                      } else {
+                        toast.error("Failed to claim NFT: Unknown error");
+                      }
+                    }}
+                    className="
+                      px-4 py-2
+                      bg-blue-500 hover:bg-blue-600
+                      dark:bg-blue-600 dark:hover:bg-blue-700
+                      text-white
+                      font-medium
+                      rounded-md
+                      transition-colors duration-300
+                    "
+                  >
+                    Claim NFT
+                  </TransactionButton>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+
+      {/* Footer remains at the bottom */}
+      <Footer />
+    </div>
   );
 }
