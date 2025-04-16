@@ -28,7 +28,7 @@ export default function MainPage() {
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>(""); // State for Search Query
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [sortOption, setSortOption] = useState<string>("Trending"); // Sorting state
+  const [sortOption, setSortOption] = useState<string>("Newest"); // Sorting state
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false); // Dropdown toggle
 
   const contract = getContract({
@@ -173,10 +173,10 @@ export default function MainPage() {
           <button
             onClick={() => {
               setSelectedCategory(null);
-              setSortOption("Trending");
+              setSortOption("Newest");
             }}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-              selectedCategory === null && sortOption === "Trending"
+              selectedCategory === null && sortOption === "Newest"
                 ? "bg-blue-600 text-white"
                 : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
             } hover:bg-blue-500 hover:text-white`}
